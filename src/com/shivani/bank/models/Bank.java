@@ -5,7 +5,6 @@ public class Bank
 {
 	private HashMap<Integer,BankAccount> accountsMap = new HashMap<>();
 	private HashMap<String, Integer> ssnAccmap = new HashMap<>();
-//	Bank() {}
 
 	public void createNewAccount(BankAccount account) {
 		accountsMap.put(account.getAccountNumber(), account);
@@ -16,15 +15,15 @@ public class Bank
 		return accountsMap.get(accNumber);
 	}
 
-	public int getAccWithSSN(String ssn) {
-		return this.ssnAccmap.get(ssn);
+	public int getAccWithSSN(String socialSecurityNumber) {
+		return this.ssnAccmap.get(socialSecurityNumber);
 	}
 
 	public Map<Integer,BankAccount> getAccountMap() {
 		return this.accountsMap;
 	}
 
-	public Map<String, Integer> getSSNACC() {
+	public Map<String, Integer> getSocialSecurityAccount() {
 		return this.ssnAccmap;
 	}
 }

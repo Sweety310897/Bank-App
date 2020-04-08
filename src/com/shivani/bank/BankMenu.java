@@ -60,18 +60,18 @@ public class BankMenu implements InputReader
     		log.log(Level.INFO, "Select Account Type: \n 1 for Savings \n 2 for Current \n 3 for FD \n 4 for DEMAT");
 			int bankAccType = Integer.parseInt(scan.next());
 			checkAccType(bankAccType);
-			log.log(Level.INFO, "Please Enter your Social Security Number");
-			String ssn = scan.next();
+			log.log(Level.INFO, "Please Enter your Aadar Card Number");
+			String aadarnumber = scan.next();
 			log.log(Level.INFO, "Please Enter Phone Number: ");
 			String custMobileNo = scan.next();
 			checkPhoneNum(custMobileNo);
 			log.log(Level.INFO, "Please Enter Customer Email Id: ");
 			String custEmail = scan.next();
 			checkEmail(custEmail);
-			if(shivaniBank.getSSNACC().containsKey(ssn)) {
-				log.log(Level.INFO, "Sorry Account already exists with account number: " + shivaniBank.getAccWithSSN(ssn));
+			if(shivaniBank.getSocialSecurityAccount().containsKey(aadarnumber)) {
+				log.log(Level.INFO, "Sorry Account already exists with account number: " + shivaniBank.getAccWithSSN(aadarnumber));
 			} else {
-				shivaniBank.createNewAccount(new BankAccount(BankMenu.accountNumber++, custName, bankAccType-1, custMobileNo, custEmail, ssn));
+				shivaniBank.createNewAccount(new BankAccount(BankMenu.accountNumber++, custName, bankAccType-1, custMobileNo, custEmail, aadarnumber));
 				log.log(Level.INFO," -> Account created with account number: " + (accountNumber-1)); 
 			    
 			}
@@ -82,9 +82,7 @@ public class BankMenu implements InputReader
 
 	}
 	public void displayAll() {
-//		shivaniBank.getAccountMap().forEach((k, v) -> System.out.println(v));
 		shivaniBank.getAccountMap().forEach((k, v) -> 	log.log(Level.INFO, "Display Details\n"+ v ));
-		
 	}
 	public void search() {
 		log.log(Level.INFO, "Please Enter the account number you want to search: ");

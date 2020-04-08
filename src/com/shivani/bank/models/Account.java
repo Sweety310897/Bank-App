@@ -8,12 +8,12 @@ class Account {
 	private long accountBalance;
 	private final String socialSecurityNumber;
 
-	Account(int accountNumber, String custName, int accType, String ssn) {
+	Account(int accountNumber, String custName, int accType, String socialSecurityNumber) {
 		this.accountNumber = accountNumber;
 		this.customerName = custName;
 		this.accountType = accTypes[accType];
 		this.accountBalance = 0;
-		this.socialSecurityNumber = ssn;
+		this.socialSecurityNumber = socialSecurityNumber;
 	}
 
 	public int getAccountNumber() {
