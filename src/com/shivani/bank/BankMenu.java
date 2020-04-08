@@ -59,7 +59,8 @@ public class BankMenu implements InputReader
 				throw new Validation("Email is not entered valid");
 			}
 	}
-
+//	Scanner scan=new Scanner(System.in);
+	
 	public void readInput()
 	{
 		Scanner scan=new Scanner(System.in);
@@ -115,13 +116,13 @@ public class BankMenu implements InputReader
 
 				case 2:
 
-					shivaniBank.getAccountList().forEach((k, v) -> System.out.println(v));
+					shivaniBank.getAccountMap().forEach((k, v) -> System.out.println(v));
 					break;
 
 				case 3:
 					System.out.print("Enter the account number you want to search: ");
 					int acn = scan.nextInt();
-					if(shivaniBank.getAccountList().containsKey(acn)) {
+					if(shivaniBank.getAccountMap().containsKey(acn)) {
 						System.out.println(shivaniBank.getAccount(acn));
 					} else {
 						System.out.println("Search failed Account dooesn't exist..");
@@ -131,7 +132,7 @@ public class BankMenu implements InputReader
 				case 4:
 					System.out.print("Enter Account No : ");
 					acn = scan.nextInt();
-					if(shivaniBank.getAccountList().containsKey(acn)) {
+					if(shivaniBank.getAccountMap().containsKey(acn)) {
 						shivaniBank.getAccount(acn).deposit();
 					} else {
 						System.out.println("Search Failed..Account Not Exist..");
@@ -141,7 +142,7 @@ public class BankMenu implements InputReader
 				case 5:
 					System.out.print("Enter Account No : ");
 					acn = scan.nextInt();
-					if(shivaniBank.getAccountList().containsKey(acn)) {
+					if(shivaniBank.getAccountMap().containsKey(acn)) {
 						shivaniBank.getAccount(acn).withdrawal();
 					} else {
 						System.out.println("Search Failed..Account Not Exist..");
