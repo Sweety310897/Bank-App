@@ -1,9 +1,7 @@
 package com.shivani.bank.models;
 import com.shivani.bank.interfaces.AccountOperations;
-import com.shivani.bank.exceptions.Validation;
+import com.shivani.bank.exceptions.InsufficientBalance;
 import java.util.*;
-
-import java.util.logging.Logger; 
 import java.util.logging.*; 
 public class BankAccount extends Account implements AccountOperations {
 	private String custPhoneNo;
@@ -26,38 +24,41 @@ public class BankAccount extends Account implements AccountOperations {
 		return this.custPhoneNo;
 	}
 
-	public void deposit() {
+	public void deposit(long amount) {
 	try {
-		long amount;
-		System.out.println("Enter the amount you want to Deposit : ");
-		amount = scan2.nextLong();
+//		long amount;
+//		System.out.println("Enter the amount you want to Deposit : ");
+//		amount = scan2.nextLong();
 		if(amount > 0 ) {
 			updateAccountBalance(getAccountBalance() + amount);
-			System.out.println("Amount deposited successfully");
+			log.log(Level.INFO, "Amount deposited successfully");
+//			System.out.println("Amount deposited successfully");
 		} else {
-			throw new Validation("You cannot deposit as the number entered by you is less than 0");
+			throw new InsufficientBalance("You cannot deposit as the number entered by you is less than 0");
 		}
 		}
-		catch(Validation e) {
+		catch(InsufficientBalance e) {
 			log.log(Level.INFO, e.getMessage()); 
 
 		}
 	}
 
-	public void withdrawal() {
+	public void withdrawal(long amount) {
 		try {
-		long amount;
-		System.out.println("Enter the amount you want to withdraw : ");
-		amount = scan2.nextLong();
+//		long amount;
+//		System.out.println("Enter the amount you want to withdraw : ");
+//		amount = scan2.nextLong();
 		if(amount < getAccountBalance() ) {
 			updateAccountBalance(getAccountBalance() - amount);
-			System.out.println("Amount Withdrawn successfully");
-			System.out.println("Remaining Balance is " + getAccountBalance());
+			log.log(Level.INFO, "Amount Withdrawn successfully");
+			log.log(Level.INFO, "Remaining Balance is " + getAccountBalance());
+//			System.out.println("Amount Withdrawn successfully");
+//			System.out.println("Remaining Balance is " + getAccountBalance());
 		}else {
-			throw new Validation("Balance is less. U caanot withdraw");
+			throw new InsufficientBalance("Balance is less. U cannot withdraw");
 		}
 		}
-		catch(Validation e) {
+		catch(InsufficientBalance e) {
 			log.log(Level.INFO, e.getMessage()); 
 			
 		}
@@ -73,6 +74,7 @@ public class BankAccount extends Account implements AccountOperations {
 	{ 
 		if(getAccountNumber() == acn)
 		{ 
+			
 			System.out.println(this);
 			return(true);
 		}

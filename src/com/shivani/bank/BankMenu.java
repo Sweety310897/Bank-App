@@ -4,6 +4,7 @@ import com.shivani.bank.exceptions.Validation;
 import com.shivani.bank.models.Bank;
 import com.shivani.bank.models.BankAccount;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern; 
 import java.util.logging.Logger; 
 import java.util.logging.*; 
@@ -11,38 +12,30 @@ public class BankMenu implements InputReader
 {  
 	LogManager lgmngr = LogManager.getLogManager(); 
 	Logger log = lgmngr.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	Scanner scan=new Scanner(System.in);
+	Bank shivaniBank = new Bank();
+
 	static int accountNumber = 1000;
 	
 	public void checkName(String name) {
         if (name == null || !name.matches("[a-zA-Z]+")) {
-            throw new Validation("Please enter your name in valid format.........");
+            throw new Validation("Please enter your name in valid format");
         } 
-
 	}
-	public void checkPhnum(String phnum) {
-		String[] num = phnum.split("");
+	public void checkPhoneNum(String phonenum) {
 		
-			if (phnum == null) {
-				throw new Validation("Phone number is not entered");
-			}
-			if(phnum.matches("[0-9]+")) {
-				if(num[0].matches("[7-9]")) {
-					if(num.length != 10) {
-						throw new Validation("Phone number should contain 10 digits");		
-					}
-				}
-				 else {
-						throw new Validation("Phone number should start with either 9, 8 or 7");
-				}
-			}
-			 else {
-					throw new Validation("Check your entered Phone number"); 
-				}
+		Pattern pattern = Pattern.compile("(0/91)?[7-9][0-9]{9}");		  
+        Matcher match = pattern.matcher(phonenum); 
+        if((match.find() && match.group().equals(phonenum))) {
+			log.log(Level.INFO, "Valid Mobile Number");
+        }
+		else {
+			throw new Validation("Check your entered Phone number"); 
+		}
 	}
 	public void checkAccType(int acctype) {
 			if(acctype<1 || acctype > 4) {
 				throw new Validation("Select valid number greater than 1 or less than 4");
-				
 			}
 	}
 
@@ -53,107 +46,125 @@ public class BankMenu implements InputReader
                             "(?:[a-zA-Z0-9-]+\\.)+[a-z" + 
                             "A-Z]{2,7}$"; 
                               
-        Pattern pat = Pattern.compile(emailRegex); 
-        
-			if (email == null || !pat.matcher(email).matches()) {
-				throw new Validation("Email is not entered valid");
-			}
+        Pattern pat = Pattern.compile(emailRegex);
+		if (email == null || !pat.matcher(email).matches()) {
+			throw new Validation("Email is not entered valid");
+		}
 	}
-//	Scanner scan=new Scanner(System.in);
-	
+
+	public void addAccount() {
+		try {
+			log.log(Level.INFO, "Please enter name");
+            String custName = scan.next();
+            checkName(custName);
+    		log.log(Level.INFO, "Select Account Type: \n 1 for Savings \n 2 for Current \n 3 for FD \n 4 for DEMAT");
+			int bankAccType = Integer.parseInt(scan.next());
+			checkAccType(bankAccType);
+			log.log(Level.INFO, "Please Enter your Social Security Number");
+			String ssn = scan.next();
+			log.log(Level.INFO, "Please Enter Phone Number: ");
+			String custMobileNo = scan.next();
+			checkPhoneNum(custMobileNo);
+			log.log(Level.INFO, "Please Enter Customer Email Id: ");
+			String custEmail = scan.next();
+			checkEmail(custEmail);
+			if(shivaniBank.getSSNACC().containsKey(ssn)) {
+				log.log(Level.INFO, "Sorry Account already exists with account number: " + shivaniBank.getAccWithSSN(ssn));
+			} else {
+				shivaniBank.createNewAccount(new BankAccount(BankMenu.accountNumber++, custName, bankAccType-1, custMobileNo, custEmail, ssn));
+				log.log(Level.INFO," -> Account created with account number: " + (accountNumber-1)); 
+			    
+			}
+		}
+		catch (Validation ex) {
+			log.log(Level.INFO, ex.getMessage()); 
+        }
+
+	}
+	public void displayAll() {
+//		shivaniBank.getAccountMap().forEach((k, v) -> System.out.println(v));
+		shivaniBank.getAccountMap().forEach((k, v) -> 	log.log(Level.INFO, "Display Details\n"+ v ));
+		
+	}
+	public void search() {
+		log.log(Level.INFO, "Please Enter the account number you want to search: ");
+		int searchAccountNumber = scan.nextInt();
+		if(shivaniBank.getAccountMap().containsKey(searchAccountNumber)) {
+			log.log(Level.INFO, "Search Details\n" + shivaniBank.getAccount(searchAccountNumber));
+			
+		} else {
+			log.log(Level.INFO, "Sorry Search failed Account dooesn't exist..");
+		}
+
+	}
+	public void depositAmount() {
+		log.log(Level.INFO, "Please Enter the account number you want to deposit: ");
+
+		int depositAccountNumber = scan.nextInt();
+		if(shivaniBank.getAccountMap().containsKey(depositAccountNumber)) {
+			long amount;
+			log.log(Level.INFO, "Please Enter the amount you want to Deposit : ");
+			amount = scan.nextLong();
+			
+			shivaniBank.getAccount(depositAccountNumber).deposit(amount);
+		} else {
+			log.log(Level.INFO, "Sorry Search Failed..Account Not Exist..");
+
+		}
+
+	}
+	public void withDrawAmount() {
+		log.log(Level.INFO, "Please Enter the account number you want to withdraw: ");
+
+		int withdrawAccountNumber = scan.nextInt();
+		if(shivaniBank.getAccountMap().containsKey(withdrawAccountNumber)) {
+			long amount;
+			log.log(Level.INFO, "Please Enter the amount you want to withdraw : ");
+			amount = scan.nextLong();
+			
+			shivaniBank.getAccount(withdrawAccountNumber).withdrawal(amount);
+		} else {
+			log.log(Level.INFO, "Sorry Search Failed..Account Not Exist..");
+		}
+
+	}
 	public void readInput()
 	{
-		Scanner scan=new Scanner(System.in);
-		Bank shivaniBank = new Bank();
 		int choice;
 		do
 		{
-			System.out.println("-----------------------------------------------------------------------------------");
-			System.out.println("Main Menu\n 1.Add Account\n 2.Display All\n 3.Search By Account\n 4.Deposit\n 5.Withdrawal\n 6.Exit");
+			log.log(Level.INFO, "Main Menu\n 1.Add Account\n 2.Display All\n 3.Search By Account\n 4.Deposit\n 5.Withdrawal\n 6.Exit");
 			choice = scan.nextInt();
-			System.out.println("-----------------------------------------------------------------------------------");
 			switch(choice)
 			{ 
 				case 1:
-					try {
-                        System.out.print("Enter Name: ");
-                        String custName = scan.next();
-                        checkName(custName);
-                        System.out.println("Select Account Type: \n 1 for Savings \n 2 for Current \n 3 for FD \n 4 for DEMAT");
-    					int bankAccType = Integer.parseInt(scan.next());
-    					checkAccType(bankAccType);
-    					
-    					System.out.println("Enter your Social Security Number");
-    					String ssn = scan.next();
-
-    					System.out.print("Enter Phone Number: ");
-    					String custMobileNo = scan.next();
-    					checkPhnum(custMobileNo);
-
-    					System.out.print("Customer Email Id: ");
-    					String custEmail = scan.next();
-    					checkEmail(custEmail);
-    					
-    					if(shivaniBank.getSSNACC().containsKey(ssn)) {
-    						System.out.println("Account already exists with account number: " + shivaniBank.getAccWithSSN(ssn));
-    					} else {
-
-    						shivaniBank.createNewAccount(new BankAccount(BankMenu.accountNumber++, custName, bankAccType-1, custMobileNo, custEmail, ssn));
-    						System.out.println(" -> Account created with account number: " + (accountNumber-1));
-    					}
-
-
-					
-					}
-					
-					catch (Validation ex) {
-            			log.log(Level.INFO, ex.getMessage()); 
-
-                    }
-
-                    break;
-					
-
+					addAccount();
+                    break;					
 				case 2:
-
-					shivaniBank.getAccountMap().forEach((k, v) -> System.out.println(v));
+					displayAll();
 					break;
 
 				case 3:
-					System.out.print("Enter the account number you want to search: ");
-					int acn = scan.nextInt();
-					if(shivaniBank.getAccountMap().containsKey(acn)) {
-						System.out.println(shivaniBank.getAccount(acn));
-					} else {
-						System.out.println("Search failed Account dooesn't exist..");
-					}
+					search();
 					break;
 
 				case 4:
-					System.out.print("Enter Account No : ");
-					acn = scan.nextInt();
-					if(shivaniBank.getAccountMap().containsKey(acn)) {
-						shivaniBank.getAccount(acn).deposit();
-					} else {
-						System.out.println("Search Failed..Account Not Exist..");
-					}
+					depositAmount();
 					break;
 
 				case 5:
-					System.out.print("Enter Account No : ");
-					acn = scan.nextInt();
-					if(shivaniBank.getAccountMap().containsKey(acn)) {
-						shivaniBank.getAccount(acn).withdrawal();
-					} else {
-						System.out.println("Search Failed..Account Not Exist..");
-					}
+					withDrawAmount();
 					break;
 
 				case 6:
-					System.out.println("Good Bye... Application has ended");
+					log.log(Level.INFO, "Application has ended");
+					break;
+				default :
+					log.log(Level.INFO, "Correct choice has not been selected");
 					break;
 			}
 		}
 		while(choice != 6);
+		scan.close();
 	}
 }
