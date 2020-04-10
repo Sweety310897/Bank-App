@@ -1,5 +1,6 @@
 package com.shivani.bank;
 import com.shivani.bank.interfaces.InputReader;
+import com.shivani.bank.exceptions.BalanceException;
 import com.shivani.bank.exceptions.ValidationException;
 import com.shivani.bank.models.Bank;
 import com.shivani.bank.models.BankAccount;
@@ -96,34 +97,33 @@ public class BankMenu implements InputReader
 
 	}
 	public void depositAmount() {
+	 try {
 		log.log(Level.INFO, "Please Enter the account number you want to deposit: ");
 
 		int depositAccountNumber = scan.nextInt();
-		if(shivaniBank.getAccountMap().containsKey(depositAccountNumber)) {
 			long amount;
 			log.log(Level.INFO, "Please Enter the amount you want to Deposit : ");
 			amount = scan.nextLong();
 			
 			shivaniBank.getAccount(depositAccountNumber).deposit(amount);
-		} else {
-			log.log(Level.INFO, "Sorry Search Failed..Account Not Exist..");
 
-		}
-
+	 }catch(ValidationException | BalanceException message ) {
+			log.log(Level.INFO, message.getMessage());
+	 }
 	}
 	public void withDrawAmount() {
+		try {	
 		log.log(Level.INFO, "Please Enter the account number you want to withdraw: ");
-
 		int withdrawAccountNumber = scan.nextInt();
-		if(shivaniBank.getAccountMap().containsKey(withdrawAccountNumber)) {
-			long amount;
-			log.log(Level.INFO, "Please Enter the amount you want to withdraw : ");
-			amount = scan.nextLong();
+		long amount;
+		log.log(Level.INFO, "Please Enter the amount you want to withdraw : ");
+		amount = scan.nextLong();
 			
 			shivaniBank.getAccount(withdrawAccountNumber).withDraw(amount);
-		} else {
-			log.log(Level.INFO, "Sorry Search Failed..Account Not Exist..");
 		}
+		catch(ValidationException | BalanceException message ) {
+			log.log(Level.INFO, message.getMessage());
+	 }
 
 	}
 	public void readInput()

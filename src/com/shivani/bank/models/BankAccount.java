@@ -24,22 +24,16 @@ public class BankAccount extends Account implements AccountOperations {
 	}
 
 	public void deposit(long amount) {
-	try {
 		if(amount > 0 ) {
 			updateAccountBalance(getAccountBalance() + amount);
 			log.log(Level.INFO, "Amount deposited successfully");
 		} else {
 			throw new BalanceException("You cannot deposit as the number entered by you is less than 0");
 		}
-		}
-		catch(BalanceException message) {
-			log.log(Level.INFO, message.getMessage()); 
 
-		}
 	}
 
-	public void withDraw(long amount) {
-		try {
+	public void withDraw(long amount) {		
 		if(amount < getAccountBalance() ) {
 			updateAccountBalance(getAccountBalance() - amount);
 			log.log(Level.INFO, "Amount Withdrawn successfully");
@@ -47,11 +41,7 @@ public class BankAccount extends Account implements AccountOperations {
 		}else {
 			throw new BalanceException("Balance is less. U cannot withdraw");
 		}
-		}
-		catch(BalanceException message) {
-			log.log(Level.INFO, message.getMessage()); 
-			
-		}
+
 	}
 
 
