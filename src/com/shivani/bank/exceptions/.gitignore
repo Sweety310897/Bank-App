@@ -1,2 +1,6 @@
 /Validation.class
 /InsufficientBalance.class
+/CheckBalance.class
+/InsufficientBalanceException.class
+/BalanceException.class
+/ValidationException.class

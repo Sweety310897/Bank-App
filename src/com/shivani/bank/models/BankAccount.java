@@ -1,12 +1,11 @@
 package com.shivani.bank.models;
 import com.shivani.bank.interfaces.AccountOperations;
-import com.shivani.bank.exceptions.InsufficientBalance;
+import com.shivani.bank.exceptions.BalanceException;
 import java.util.*;
 import java.util.logging.*; 
 public class BankAccount extends Account implements AccountOperations {
 	private String custPhoneNo;
 	private String custEmailId;
-//	static int accountNumber = 1000;
 	
 	LogManager lgmngr = LogManager.getLogManager(); 
 	Logger log = lgmngr.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -30,27 +29,27 @@ public class BankAccount extends Account implements AccountOperations {
 			updateAccountBalance(getAccountBalance() + amount);
 			log.log(Level.INFO, "Amount deposited successfully");
 		} else {
-			throw new InsufficientBalance("You cannot deposit as the number entered by you is less than 0");
+			throw new BalanceException("You cannot deposit as the number entered by you is less than 0");
 		}
 		}
-		catch(InsufficientBalance e) {
-			log.log(Level.INFO, e.getMessage()); 
+		catch(BalanceException message) {
+			log.log(Level.INFO, message.getMessage()); 
 
 		}
 	}
 
-	public void withdrawal(long amount) {
+	public void withDraw(long amount) {
 		try {
 		if(amount < getAccountBalance() ) {
 			updateAccountBalance(getAccountBalance() - amount);
 			log.log(Level.INFO, "Amount Withdrawn successfully");
 			log.log(Level.INFO, "Remaining Balance is " + getAccountBalance());
 		}else {
-			throw new InsufficientBalance("Balance is less. U cannot withdraw");
+			throw new BalanceException("Balance is less. U cannot withdraw");
 		}
 		}
-		catch(InsufficientBalance e) {
-			log.log(Level.INFO, e.getMessage()); 
+		catch(BalanceException message) {
+			log.log(Level.INFO, message.getMessage()); 
 			
 		}
 	}
@@ -60,14 +59,5 @@ public class BankAccount extends Account implements AccountOperations {
 		return "Name: " + getCustomerName() + "\n" + "Account Number: " + getAccountNumber() + "\n" + "Account Type: " + getAccountType() + "\n" + "Available Balance: " + getAccountBalance() + "\n" + "Mobile Number: " + getCustPhone() + "\n" + "Email id: " + getCustEmail() + "\n";
 	}
 
-	boolean search(int acn)
-	{ 
-		if(getAccountNumber() == acn)
-		{ 
-			
-			System.out.println(this);
-			return(true);
-		}
-		return(false);
-	}
+
 }

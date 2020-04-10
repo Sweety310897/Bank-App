@@ -1,6 +1,6 @@
 package com.shivani.bank;
 import com.shivani.bank.interfaces.InputReader;
-import com.shivani.bank.exceptions.Validation;
+import com.shivani.bank.exceptions.ValidationException;
 import com.shivani.bank.models.Bank;
 import com.shivani.bank.models.BankAccount;
 import java.util.*;
@@ -19,23 +19,23 @@ public class BankMenu implements InputReader
 	
 	public void checkName(String name) {
         if (name == null || !name.matches("[a-zA-Z]+")) {
-            throw new Validation("Please enter your name in valid format");
+            throw new ValidationException("Please enter your name in valid format");
         } 
 	}
-	public void checkPhoneNum(String phonenum) {
+	public void checkPhoneNum(String phoneNum) {
 		
 		Pattern pattern = Pattern.compile("(0/91)?[7-9][0-9]{9}");		  
-        Matcher match = pattern.matcher(phonenum); 
-        if((match.find() && match.group().equals(phonenum))) {
+        Matcher match = pattern.matcher(phoneNum); 
+        if((match.find() && match.group().equals(phoneNum))) {
 			log.log(Level.INFO, "Valid Mobile Number");
         }
 		else {
-			throw new Validation("Check your entered Phone number"); 
+			throw new ValidationException("Check your entered Phone number"); 
 		}
 	}
-	public void checkAccType(int acctype) {
-			if(acctype<1 || acctype > 4) {
-				throw new Validation("Select valid number greater than 1 or less than 4");
+	public void checkAccType(int accType) {
+			if(accType<1 || accType > 4) {
+				throw new ValidationException("Select valid number greater than 1 or less than 4");
 			}
 	}
 
@@ -48,7 +48,7 @@ public class BankMenu implements InputReader
                               
         Pattern pattern = Pattern.compile(emailRegex);
 		if (email == null || !pattern.matcher(email).matches()) {
-			throw new Validation("Email is not entered valid");
+			throw new ValidationException("Check your entered email");
 		}
 	}
 
@@ -61,30 +61,30 @@ public class BankMenu implements InputReader
 			int bankAccType = Integer.parseInt(scan.next());
 			checkAccType(bankAccType);
 			log.log(Level.INFO, "Please Enter your Aadar Card Number");
-			String aadarnumber = scan.next();
+			String aadarNumber = scan.next();
 			log.log(Level.INFO, "Please Enter Phone Number: ");
 			String custMobileNo = scan.next();
 			checkPhoneNum(custMobileNo);
 			log.log(Level.INFO, "Please Enter Customer Email Id: ");
 			String custEmail = scan.next();
 			checkEmail(custEmail);
-			if(shivaniBank.getSocialSecurityAccount().containsKey(aadarnumber)) {
-				log.log(Level.INFO, "Sorry Account already exists with account number: " + shivaniBank.getAccWithSSN(aadarnumber));
+			if(shivaniBank.getSocialSecurityAccount().containsKey(aadarNumber)) {
+				log.log(Level.INFO, "Sorry Account already exists with account number: " + shivaniBank.getAccWithSSN(aadarNumber));
 			} else {
-				shivaniBank.createNewAccount(new BankAccount(accountNumber++, custName, bankAccType-1, custMobileNo, custEmail, aadarnumber));
+				shivaniBank.createNewAccount(new BankAccount(accountNumber++, custName, bankAccType-1, custMobileNo, custEmail, aadarNumber));
 				log.log(Level.INFO," -> Account created with account number: " + (accountNumber-1)); 
 			    
 			}
 		}
-		catch (Validation exMsg) {
-			log.log(Level.INFO, exMsg.getMessage()); 
+		catch (ValidationException message) {
+			log.log(Level.INFO, message.getMessage()); 
         }
 
 	}
 	public void displayAll() {
 		shivaniBank.getAccountMap().forEach((k, v) -> 	log.log(Level.INFO, "Display Details\n"+ v ));
 	}
-	public void search() {
+	public void searchByAccount() {
 		log.log(Level.INFO, "Please Enter the account number you want to search: ");
 		int searchAccountNumber = scan.nextInt();
 		if(shivaniBank.getAccountMap().containsKey(searchAccountNumber)) {
@@ -120,7 +120,7 @@ public class BankMenu implements InputReader
 			log.log(Level.INFO, "Please Enter the amount you want to withdraw : ");
 			amount = scan.nextLong();
 			
-			shivaniBank.getAccount(withdrawAccountNumber).withdrawal(amount);
+			shivaniBank.getAccount(withdrawAccountNumber).withDraw(amount);
 		} else {
 			log.log(Level.INFO, "Sorry Search Failed..Account Not Exist..");
 		}
@@ -143,7 +143,7 @@ public class BankMenu implements InputReader
 					break;
 
 				case 3:
-					search();
+					searchByAccount();
 					break;
 
 				case 4:
