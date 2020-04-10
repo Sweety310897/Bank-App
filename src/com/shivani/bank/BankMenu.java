@@ -46,8 +46,8 @@ public class BankMenu implements InputReader
                             "(?:[a-zA-Z0-9-]+\\.)+[a-z" + 
                             "A-Z]{2,7}$"; 
                               
-        Pattern pat = Pattern.compile(emailRegex);
-		if (email == null || !pat.matcher(email).matches()) {
+        Pattern pattern = Pattern.compile(emailRegex);
+		if (email == null || !pattern.matcher(email).matches()) {
 			throw new Validation("Email is not entered valid");
 		}
 	}
@@ -71,13 +71,13 @@ public class BankMenu implements InputReader
 			if(shivaniBank.getSocialSecurityAccount().containsKey(aadarnumber)) {
 				log.log(Level.INFO, "Sorry Account already exists with account number: " + shivaniBank.getAccWithSSN(aadarnumber));
 			} else {
-				shivaniBank.createNewAccount(new BankAccount(BankMenu.accountNumber++, custName, bankAccType-1, custMobileNo, custEmail, aadarnumber));
+				shivaniBank.createNewAccount(new BankAccount(accountNumber++, custName, bankAccType-1, custMobileNo, custEmail, aadarnumber));
 				log.log(Level.INFO," -> Account created with account number: " + (accountNumber-1)); 
 			    
 			}
 		}
-		catch (Validation ex) {
-			log.log(Level.INFO, ex.getMessage()); 
+		catch (Validation exMsg) {
+			log.log(Level.INFO, exMsg.getMessage()); 
         }
 
 	}
