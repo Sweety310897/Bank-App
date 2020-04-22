@@ -4,3 +4,4 @@
 /InsufficientBalanceException.class
 /BalanceException.class
 /ValidationException.class
+/AccountDetailsException.class

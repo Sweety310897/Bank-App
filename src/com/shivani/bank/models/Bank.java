@@ -1,7 +1,7 @@
 package com.shivani.bank.models;
 import java.util.*;
 
-import com.shivani.bank.exceptions.ValidationException;
+import com.shivani.bank.exceptions.AccountDetailsException;
 public class Bank
 {
 	private HashMap<Integer,BankAccount> accountsMap = new HashMap<>();
@@ -14,7 +14,7 @@ public class Bank
 
 	public BankAccount getAccount(int accNumber) {
 		if(accountsMap.get(accNumber)==null) {
-			throw new ValidationException("Invalid Account, We have not found the account");
+			throw new AccountDetailsException("Invalid Account, We have not found the account");
 		}
 		return accountsMap.get(accNumber);
 	}

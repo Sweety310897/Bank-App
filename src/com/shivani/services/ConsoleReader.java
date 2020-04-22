@@ -1,74 +1,78 @@
-package com.shivani.bank;
-import com.shivani.bank.interfaces.InputReader;
+package com.shivani.services;
+
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.shivani.bank.exceptions.BalanceException;
-import com.shivani.bank.exceptions.ValidationException;
+import com.shivani.bank.exceptions.AccountDetailsException;
+import com.shivani.bank.interfaces.InputReader;
 import com.shivani.bank.models.Bank;
 import com.shivani.bank.models.BankAccount;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern; 
-import java.util.logging.Logger; 
-import java.util.logging.*; 
-public class BankMenu implements InputReader
-{  
+import com.shivani.validations.InputValidations;
+
+public class ConsoleReader implements InputReader{
 	LogManager lgmngr = LogManager.getLogManager(); 
 	Logger log = lgmngr.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	Scanner scan=new Scanner(System.in);
 	Bank shivaniBank = new Bank();
-
+	InputValidations validate = new InputValidations();
 	static int accountNumber = 1000;
-	
-	public void checkName(String name) {
-        if (name == null || !name.matches("[a-zA-Z]+")) {
-            throw new ValidationException("Please enter your name in valid format");
-        } 
-	}
-	public void checkPhoneNum(String phoneNum) {
-		
-		Pattern pattern = Pattern.compile("(0/91)?[7-9][0-9]{9}");		  
-        Matcher match = pattern.matcher(phoneNum); 
-        if((match.find() && match.group().equals(phoneNum))) {
-			log.log(Level.INFO, "Valid Mobile Number");
-        }
-		else {
-			throw new ValidationException("Check your entered Phone number"); 
-		}
-	}
-	public void checkAccType(int accType) {
-			if(accType<1 || accType > 4) {
-				throw new ValidationException("Select valid number greater than 1 or less than 4");
-			}
-	}
-
-	public void checkEmail(String email) {
-		 
-		String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+ 
-                            "[a-zA-Z0-9_+&*-]+)*@" + 
-                            "(?:[a-zA-Z0-9-]+\\.)+[a-z" + 
-                            "A-Z]{2,7}$"; 
-                              
-        Pattern pattern = Pattern.compile(emailRegex);
-		if (email == null || !pattern.matcher(email).matches()) {
-			throw new ValidationException("Check your entered email");
-		}
-	}
+//	
+//	public void checkName(String name) {
+//        if (name == null || !name.matches("[a-zA-Z]+")) {
+//            throw new AccountDetailsException("Please enter your name in valid format");
+//        } 
+//	}
+//	public void checkPhoneNum(String phoneNum) {
+//		
+//		Pattern pattern = Pattern.compile("(0/91)?[7-9][0-9]{9}");		  
+//        Matcher match = pattern.matcher(phoneNum); 
+//        if((match.find() && match.group().equals(phoneNum))) {
+//			log.log(Level.INFO, "Valid Mobile Number");
+//        }
+//		else {
+//			throw new AccountDetailsException("Check your entered Phone number"); 
+//		}
+//	}
+//	public void checkAccType(int accType) {
+//			if(accType<1 || accType > 4) {
+//				throw new AccountDetailsException("Select valid number greater than 1 or less than 4");
+//			}
+//	}
+//
+//	public void checkEmail(String email) {
+//		 
+//		String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+ 
+//                            "[a-zA-Z0-9_+&*-]+)*@" + 
+//                            "(?:[a-zA-Z0-9-]+\\.)+[a-z" + 
+//                            "A-Z]{2,7}$"; 
+//                              
+//        Pattern pattern = Pattern.compile(emailRegex);
+//		if (email == null || !pattern.matcher(email).matches()) {
+//			throw new AccountDetailsException("Check your entered email");
+//		}
+//	}
 
 	public void addAccount() {
 		try {
 			log.log(Level.INFO, "Please enter name");
             String custName = scan.next();
-            checkName(custName);
+            validate.checkName(custName);
     		log.log(Level.INFO, "Select Account Type: \n 1 for Savings \n 2 for Current \n 3 for FD \n 4 for DEMAT");
 			int bankAccType = Integer.parseInt(scan.next());
-			checkAccType(bankAccType);
+			validate.checkAccType(bankAccType);
 			log.log(Level.INFO, "Please Enter your Aadar Card Number");
 			String aadarNumber = scan.next();
 			log.log(Level.INFO, "Please Enter Phone Number: ");
 			String custMobileNo = scan.next();
-			checkPhoneNum(custMobileNo);
+			validate.checkPhoneNum(custMobileNo);
 			log.log(Level.INFO, "Please Enter Customer Email Id: ");
 			String custEmail = scan.next();
-			checkEmail(custEmail);
+			validate.checkEmail(custEmail);
 			if(shivaniBank.getSocialSecurityAccount().containsKey(aadarNumber)) {
 				log.log(Level.INFO, "Sorry Account already exists with account number: " + shivaniBank.getAccWithSSN(aadarNumber));
 			} else {
@@ -77,7 +81,7 @@ public class BankMenu implements InputReader
 			    
 			}
 		}
-		catch (ValidationException message) {
+		catch (AccountDetailsException message) {
 			log.log(Level.INFO, message.getMessage()); 
         }
 
@@ -107,7 +111,7 @@ public class BankMenu implements InputReader
 			
 			shivaniBank.getAccount(depositAccountNumber).deposit(amount);
 
-	 }catch(ValidationException | BalanceException message ) {
+	 }catch(AccountDetailsException | BalanceException message ) {
 			log.log(Level.INFO, message.getMessage());
 	 }
 	}
@@ -121,7 +125,7 @@ public class BankMenu implements InputReader
 			
 			shivaniBank.getAccount(withdrawAccountNumber).withDraw(amount);
 		}
-		catch(ValidationException | BalanceException message ) {
+		catch(AccountDetailsException | BalanceException message ) {
 			log.log(Level.INFO, message.getMessage());
 	 }
 
@@ -165,4 +169,5 @@ public class BankMenu implements InputReader
 		while(choice != 6);
 		scan.close();
 	}
+
 }
