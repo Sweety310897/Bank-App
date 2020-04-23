@@ -1,0 +1,7 @@
+addAccount Shivani 1 1234 9640770108 pulluri@gmail.com
+addAccount ravi 2 1235 9550000957 shiva@gmail.com
+displayAll
+searchByAccount 1001
+depositAmount 1001 1200
+withDrawAmount 1001 200
+displayAll

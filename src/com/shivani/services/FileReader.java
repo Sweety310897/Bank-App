@@ -1,7 +1,6 @@
 package com.shivani.services;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -75,8 +74,8 @@ public class FileReader implements InputReader {
 
 		@Override
 		public void readInput() {
-			  try {
-				  File file = new File("F:\\Office\\Bank\\Bank\\Bank-App\\input.txt"); 
+			  try { 
+				  File file = new File("com/shivani/resources/inputs.txt");
 				  Scanner myReader = new Scanner(file);					
 				  while (myReader.hasNextLine()) {
 					      String fileData = myReader.nextLine();
@@ -104,7 +103,7 @@ public class FileReader implements InputReader {
 								break;
 							}
 					      
-				  }
+				  } myReader.close();
 				} catch (FileNotFoundException message) {
 					logger.log(Level.INFO, "File Not Found");
 				}
